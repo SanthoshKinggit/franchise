@@ -291,114 +291,132 @@ class _DashboardScreenState extends State<DashboardScreen>
                         borderRadius: BorderRadius.circular(22)),
                     child: Column(
                       children: [
-                       Padding(
-  padding: const EdgeInsets.all(16.0),
-  child: Row(
-    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    children: [
-      // Sales Earnings Card
-      Expanded(
-        child: SizedBox(
-          height: 130,
-          child: OpenContainer(
-            closedBuilder: (context, action) => GestureDetector(
-              onTap: () => SalesEarningsDetailsScreen(),
-              child: Card(
-                child: Container(
-                  padding: EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Sales Earnings',
-                            style: GoogleFonts.poppins(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          Icon(
-                            Icons.attach_money,
-                            color: Color.fromARGB(255, 117, 0, 106),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 8),
-                      Text(
-                        '₹17,600.50',
-                        style: GoogleFonts.poppins(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.green,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            openBuilder: (context, _) => SalesEarningsDetailsScreen(),
-          ),
-        ),
-      ),
+                        Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              // Sales Earnings Card
+                              Expanded(
+                                child: OpenContainer(
+                                  closedBuilder: (context, action) =>
+                                      GestureDetector(
+                                    onTap: () => SalesEarningsDetailsScreen(),
+                                    child: Card(
+                                      child: Container(
+                                        padding: EdgeInsets.all(16),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                  Icon(Icons.currency_bitcoin,
+                                                color: Color.fromARGB(
+                                                    255, 117, 0, 106)),
+                                                Text(
+                                                  'Sales Earnings',
+                                                  style: GoogleFonts.poppins(
+                                                    fontSize: 12,
+                                                    fontWeight:
+                                                        FontWeight.w600,
+                                                  ),
+                                                ),
+                                                Icon(
+                                                  Icons.attach_money,
+                                                  color: Color.fromARGB(
+                                                      255, 117, 0, 106),
+                                                ),
+                                              ],
+                                            ),
+                                            SizedBox(height: 8),
+                                            Text(
+                                              '₹17,600.50',
+                                              style: GoogleFonts.poppins(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w500,
+                                                color: Colors.green,
+                                              ),
+                                            ),
+                                          
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  openBuilder: (context, _) =>
+                                      SalesEarningsDetailsScreen(),
+                                ),
+                              ),
 
-      SizedBox(width: 16),
+                              SizedBox(width: 16),
 
-      // Referral Earnings Card
-      Expanded(
-        child: GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ReferEarningsScreen(),
-              ),
-            );
-          },
-          child: Card(
-            child: Container(
-              padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Referral Earnings',
-                        style: GoogleFonts.poppins(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
+                              // Referral Earnings Card
+                              Expanded(
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            ReferEarningsScreen(),
+                                      ),
+                                    );
+                                  },
+                                  child: Card(
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: 16, horizontal: 16),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                'Referral Earnings',
+                                                style: GoogleFonts.poppins(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                              Icon(
+                                                Icons.people_outline,
+                                                color: Color.fromARGB(
+                                                    255, 117, 0, 106),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(height: 8),
+                                          Text(
+                                            '₹1,051.25',
+                                            style: GoogleFonts.poppins(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.blue,
+                                            ),
+                                          ),
+                                          Icon(Icons.people_outline,
+                                              color: Color.fromARGB(
+                                                  255, 117, 0, 106)),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                      Icon(
-                        Icons.people_outline,
-                        color: Color.fromARGB(255, 117, 0, 106),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    '₹1,051.25',
-                    style: GoogleFonts.poppins(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.blue,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    ],
-  ),
-),
                         GridView.count(
                           shrinkWrap: true,
                           physics: NeverScrollableScrollPhysics(),
