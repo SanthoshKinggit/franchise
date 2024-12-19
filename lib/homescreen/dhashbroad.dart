@@ -311,26 +311,20 @@ class _DashboardScreenState extends State<DashboardScreen>
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
                                           children: [
+                                            Icon(Icons.currency_bitcoin,
+                                                color: Color.fromARGB(
+                                                    255, 117, 0, 106)),
                                             Row(
                                               mainAxisAlignment:
                                                   MainAxisAlignment
                                                       .spaceBetween,
                                               children: [
-                                                  Icon(Icons.currency_bitcoin,
-                                                color: Color.fromARGB(
-                                                    255, 117, 0, 106)),
                                                 Text(
                                                   'Sales Earnings',
                                                   style: GoogleFonts.poppins(
                                                     fontSize: 12,
-                                                    fontWeight:
-                                                        FontWeight.w600,
+                                                    fontWeight: FontWeight.w600,
                                                   ),
-                                                ),
-                                                Icon(
-                                                  Icons.attach_money,
-                                                  color: Color.fromARGB(
-                                                      255, 117, 0, 106),
                                                 ),
                                               ],
                                             ),
@@ -343,7 +337,6 @@ class _DashboardScreenState extends State<DashboardScreen>
                                                 color: Colors.green,
                                               ),
                                             ),
-                                          
                                           ],
                                         ),
                                       ),
@@ -378,6 +371,11 @@ class _DashboardScreenState extends State<DashboardScreen>
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: [
+                                          Icon(
+                                            Icons.people_outline,
+                                            color: Color.fromARGB(
+                                                255, 117, 0, 106),
+                                          ),
                                           Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
@@ -388,11 +386,6 @@ class _DashboardScreenState extends State<DashboardScreen>
                                                   fontSize: 12,
                                                   fontWeight: FontWeight.w600,
                                                 ),
-                                              ),
-                                              Icon(
-                                                Icons.people_outline,
-                                                color: Color.fromARGB(
-                                                    255, 117, 0, 106),
                                               ),
                                             ],
                                           ),
