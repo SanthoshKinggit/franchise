@@ -1,30 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../colors/colors.dart';
 import 'myshop.dart';
-
 class ShopDetailsScreen extends StatelessWidget {
   final Shop shop;
 
-  const ShopDetailsScreen({Key? key, required this.shop}) : super(key: key);
+  const ShopDetailsScreen({super.key, required this.shop});
+
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        actions: [
+        IconButton(
+            icon: Icon(Icons.tune, color: Colors.white),
+            onPressed: () => _showFilterOptions(context),
+          ),
+
+        ],
         centerTitle: true,
-        flexibleSpace: Container(
+              flexibleSpace: Container(
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Colors.black,
-                Color.fromARGB(255, 117, 0, 106),
-                Colors.black,
-              ],
-            ),
+            gradient: AppColors.blackGradient,
+            
           ),
         ),
         leading: IconButton(
@@ -38,15 +40,7 @@ class ShopDetailsScreen extends StatelessWidget {
       ),
       body: Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Colors.black,
-              Color.fromARGB(255, 80, 2, 64),
-              Colors.black,
-            ],
-          ),
+          gradient: AppColors.blackGradient
         ),
         child: SingleChildScrollView(
           child: Padding(
@@ -54,47 +48,49 @@ class ShopDetailsScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Shop Header
-                Card(
-                  color: Colors.white.withOpacity(0.2),
-                  child: Padding(
-                    padding: EdgeInsets.all(20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Icon(Icons.store, color: Colors.white, size: 40),
-                            _buildStatusBadge(shop.status),
-                          ],
+                Stack(
+                  children: [
+                    Container(
+                      height: 300,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage(shop.image), // Corrected to use shop.image
+                          fit: BoxFit.cover,
                         ),
-                        SizedBox(height: 20),
-                        Text(
-                          shop.name,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(height: 10),
-                        Text(
-                          'Shop ID: #${shop.id}',
-                          style: TextStyle(
-                            color: Colors.white70,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
-                  ),
+                   
+                    Positioned(
+                      bottom: 20,
+                      left: 20,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(22),
+                          color: Colors.black.withOpacity(0.4),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            shop.name,
+                            style: TextStyle(
+                              color: const Color.fromARGB(255, 255, 255, 255),
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 SizedBox(height: 20),
-                
-                // Details Section
                 Card(
-                  color: Colors.white.withOpacity(0.2),
+                  color: Colors.white,
+                  elevation: 8,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                   child: Padding(
                     padding: EdgeInsets.all(20),
                     child: Column(
@@ -105,7 +101,7 @@ class ShopDetailsScreen extends StatelessWidget {
                           shop.location,
                           Icons.location_on,
                         ),
-                        Divider(color: Colors.white30),
+                        Divider(color: const Color.fromARGB(77, 66, 58, 58)),
                         _buildDetailRow(
                           'Total Items',
                           shop.items.toString(),
@@ -117,15 +113,22 @@ class ShopDetailsScreen extends StatelessWidget {
                           shop.revenue,
                           Icons.attach_money,
                         ),
+                         _buildDetailRow(
+                          'phoneNumber',
+                          shop.phoneNumber,
+                          Icons.phone,
+                        ),
                       ],
                     ),
                   ),
                 ),
-                
-                // Analytics Card
                 SizedBox(height: 20),
                 Card(
-                  color: Colors.white.withOpacity(0.2),
+                  color: Colors.white,
+                  elevation: 8,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                   child: Padding(
                     padding: EdgeInsets.all(20),
                     child: Column(
@@ -134,7 +137,7 @@ class ShopDetailsScreen extends StatelessWidget {
                         Text(
                           'Analytics',
                           style: TextStyle(
-                            color: Colors.white,
+                            color: const Color.fromARGB(255, 0, 0, 0),
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
                           ),
@@ -154,6 +157,7 @@ class ShopDetailsScreen extends StatelessWidget {
                     ),
                   ),
                 ),
+                SizedBox(height: 60),
               ],
             ),
           ),
@@ -166,28 +170,24 @@ class ShopDetailsScreen extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: status == 'Active'
-            ? Colors.green.withOpacity(0.1)
-            : Colors.red.withOpacity(0.1),
+        color: status == 'Active' ? Colors.green : Colors.red,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: status == 'Active' ? Colors.green : Colors.red,
-          width: 1,
-        ),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
             status == 'Active' ? Icons.check_circle : Icons.cancel,
-            color: status == 'Active' ? Colors.green : Colors.red,
+            color: Colors.white,
             size: 16,
           ),
-          SizedBox(width: 4),
+          SizedBox(width: 5),
           Text(
             status,
             style: TextStyle(
-              color: status == 'Active' ? Colors.green : Colors.red,
+              color: Colors.white,
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
             ),
           ),
         ],
@@ -200,7 +200,7 @@ class ShopDetailsScreen extends StatelessWidget {
       padding: EdgeInsets.symmetric(vertical: 10),
       child: Row(
         children: [
-          Icon(icon, color: Colors.white70),
+          Icon(icon, color: Colors.black, size: 30),
           SizedBox(width: 15),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -208,18 +208,19 @@ class ShopDetailsScreen extends StatelessWidget {
               Text(
                 title,
                 style: TextStyle(
-                  color: Colors.white70,
+                  color: const Color.fromARGB(179, 0, 0, 0),
                   fontSize: 14,
                 ),
               ),
               Text(
                 value,
                 style: TextStyle(
-                  color: Colors.white,
+                  color: const Color.fromARGB(255, 0, 0, 0),
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),
               ),
+              
             ],
           ),
         ],
@@ -232,7 +233,7 @@ class ShopDetailsScreen extends StatelessWidget {
       padding: EdgeInsets.symmetric(vertical: 10),
       child: Row(
         children: [
-          Icon(icon, color: Colors.white70),
+          Icon(icon, color: Colors.black, size: 30),
           SizedBox(width: 15),
           Expanded(
             child: Row(
@@ -240,12 +241,12 @@ class ShopDetailsScreen extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: TextStyle(color: Colors.white70),
+                  style: TextStyle(color: const Color.fromARGB(179, 0, 0, 0)),
                 ),
                 Text(
                   value,
                   style: TextStyle(
-                    color: Colors.white,
+                    color: const Color.fromARGB(255, 0, 0, 0),
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -257,3 +258,44 @@ class ShopDetailsScreen extends StatelessWidget {
     );
   }
 }
+
+
+  void _showFilterOptions(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Filter Transactions'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                title: Text('Last 6 months'),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                title: Text('Last 1 year'),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                title: Text('Last month'),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                title: Text('All Transactions'),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }

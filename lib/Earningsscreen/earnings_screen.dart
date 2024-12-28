@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import '../bottomscreen/bottom_screen.dart';
+import '../colors/colors.dart';
 
-import 'earning_details.dart';
-
-// Models
 class EarningDetail {
   final String id;
   final DateTime date;
@@ -12,6 +11,7 @@ class EarningDetail {
   final double totalSales;
   final double commission;
   final String status;
+  bool isExpanded;
 
   EarningDetail({
     required this.id,
@@ -20,164 +20,308 @@ class EarningDetail {
     required this.totalSales,
     required this.commission,
     required this.status,
+    this.isExpanded = false,
   });
 }
 
-// Main App
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Earnings Screen',
-      theme: ThemeData(
-        primarySwatch: MaterialColor(0xFF6A4FA3, {
-          50: Color(0xFFEDE7F6),
-          100: Color(0xFFD1C4E9),
-          200: Color(0xFFB39DDB),
-          300: Color(0xFF9575CD),
-          400: Color(0xFF7E57C2),
-          500: Color(0xFF6A4FA3),
-          600: Color(0xFF5E35B1),
-          700: Color(0xFF512DA8),
-          800: Color(0xFF4527A0),
-          900: Color(0xFF311B92),
-        }),
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      home: EarningsScreen(),
-    );
-  }
-}
-
-// Earnings List Screen
 class EarningsScreen extends StatefulWidget {
+  const EarningsScreen({super.key});
+
   @override
   _EarningsScreenState createState() => _EarningsScreenState();
 }
 
-class _EarningsScreenState extends State<EarningsScreen> {
+class _EarningsScreenState extends State<EarningsScreen>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+  final currencyFormatter =
+      NumberFormat.currency(symbol: '₹', decimalDigits: 2);
+
   final List<EarningDetail> earnings = [
     EarningDetail(
-      id: 'EARN001',
-      date: DateTime(2024, 1, 15),
+      id: 'EARN654646001',
+      date: DateTime(2024, 1, 15, 10, 30), // Specific time: 10:30 AM
       shopName: 'Downtown Boutique',
       totalSales: 12500.00,
       commission: 625.00,
       status: 'Completed',
     ),
     EarningDetail(
-      id: 'EARN002',
-      date: DateTime(2024, 1, 22),
+      id: 'EARN6654646002',
+      date: DateTime(2024, 1, 22, 14, 45), // Specific time: 2:45 PM
       shopName: 'Riverside Market',
       totalSales: 8200.00,
       commission: 410.00,
-      status: 'Pending',
+      status: 'Completed',
     ),
     EarningDetail(
-      id: 'EARN003',
-      date: DateTime(2024, 1, 30),
+      id: 'EARN64644645003',
+      date: DateTime(2024, 1, 30, 9, 0), // Specific time: 9:00 AM
       shopName: 'Sunset Gallery',
       totalSales: 15300.00,
       commission: 765.00,
       status: 'Completed',
     ),
     EarningDetail(
-      id: 'EARN004',
-      date: DateTime(2024, 2, 5),
+      id: 'EARN654654004',
+      date: DateTime(2024, 2, 5, 18, 15), // Specific time: 6:15 PM
       shopName: 'Urban Marketplace',
       totalSales: 9800.00,
       commission: 490.00,
-      status: 'Processing',
+      status: 'Completed',
     ),
   ];
+  String filter = 'All'; // Default filter option
 
-  final currencyFormatter = NumberFormat.currency(symbol: '₹', decimalDigits: 2);
+  // Method to show the filter options dialog
+   void _showFilterOptions(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Filter Transactions'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                title: Text('Last 6 months'),
+                onTap: () {
+                  setState(() => filter = 'Last 6 months');
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                title: Text('Last 1 year'),
+                onTap: () {
+                  setState(() => filter = 'Last 1 year');
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                title: Text('Last month'),
+                onTap: () {
+                  setState(() => filter = 'Last month');
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                title: Text('All Transactions'),
+                onTap: () {
+                  setState(() => filter = 'All');
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        centerTitle: true,
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Colors.black,
-                Color.fromARGB(255, 117, 0, 106),
-                Colors.black,
-              ],
-            ),
-          ),
-        ),
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: Icon(
-            Icons.arrow_back_ios,
-            color: Colors.white,
-          ),
-        ),
-        title: Text(
-          'Total Earnings',
-          style: GoogleFonts.poppins(
-            color: Colors.white,
-          ),
-        ),
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 3, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  void toggleExpand(int index) {
+    setState(() {
+      earnings[index].isExpanded = !earnings[index].isExpanded;
+    });
+  }
+
+  Widget _buildTabBar() {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 16),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.2),
+        borderRadius: BorderRadius.circular(13),
       ),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Colors.black,
-              Color.fromARGB(255, 80, 2, 64),
-              Colors.black,
+      child: TabBar(
+        controller: _tabController,
+        indicatorColor: Colors.white,
+        labelColor: Colors.white,
+        unselectedLabelColor: Colors.white,
+        tabs: const [
+          Tab(text: 'Shop Sales'),
+          Tab(text: 'Purchase Earnings'),
+          Tab(text: 'Total Earnings'),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTabBarView() {
+    return TabBarView(
+      controller: _tabController,
+      children: [
+        _buildTransactionsList(),
+        _buildTransactionsList(),
+        _buildTransactionsList(),
+      ],
+    );
+  }
+
+  Widget _buildTransactionsList() {
+    if (earnings.isEmpty) {
+      return _buildEmptyState('No earnings data available');
+    } else {
+      return ListView.builder(
+        padding: EdgeInsets.all(16),
+        itemCount: earnings.length,
+        itemBuilder: (context, index) =>
+            _buildTransactionCard(earnings[index], index),
+      );
+    }
+  }
+
+  Widget _buildTransactionCard(EarningDetail earning, int index) {
+    Color statusColor =
+        earning.status == 'Completed' ? Colors.green : Colors.grey;
+
+    return Card(
+      margin: EdgeInsets.only(bottom: 16),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: InkWell(
+        onTap: () => toggleExpand(index),
+        child: Padding(
+          padding: EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildTransactionHeader(earning, statusColor),
+              if (earning.isExpanded) _buildExpandedContent(earning),
             ],
           ),
         ),
-        child: Column(
-          children: [
-            _buildEarningsSummaryCard(),
-            Expanded(
-              child: ListView.builder(
-                padding: EdgeInsets.all(16),
-                itemCount: earnings.length,
-                itemBuilder: (context, index) {
-                  return _buildEarningItemCard(earnings[index], context);
-                },
+      ),
+    );
+  }
+
+  Widget _buildTransactionHeader(EarningDetail earning, Color statusColor) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    earning.shopName,
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
+                  _buildStatusBadge(earning.status, statusColor),
+                ],
               ),
-            ),
-          ],
+              SizedBox(height: 4),
+              Text(
+                ' ${currencyFormatter.format(earning.totalSales)}',
+                style: TextStyle(
+                    color: const Color.fromARGB(255, 60, 199, 42),
+                    fontSize: 12),
+              ),
+              SizedBox(height: 4),
+              Text(
+                'Trans ID: ${earning.id}',
+                style: TextStyle(color: Colors.grey[600], fontSize: 12),
+              ),
+              Text(
+                DateFormat('dd MMM yyyy hh:mm a').format(earning.date),
+                style: TextStyle(color: Colors.grey[600], fontSize: 12),
+              ),
+            ],
+          ),
         ),
+      ],
+    );
+  }
+
+  Widget _buildStatusBadge(String status, Color color) {
+    return Row(
+      children: [
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          decoration: BoxDecoration(
+            color: color.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: color, width: 1),
+          ),
+          child: Text(
+            status,
+            style: TextStyle(
+                color: color, fontSize: 12, fontWeight: FontWeight.bold),
+          ),
+        ),
+        SizedBox(width: 8),
+        Icon(
+          status == 'Completed'
+              ? Icons.keyboard_arrow_down_outlined
+              : Icons.keyboard_arrow_down,
+          color: const Color.fromARGB(255, 94, 94, 94),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildExpandedContent(EarningDetail earning) {
+    return Column(
+      children: [
+        Divider(height: 24),
+        _buildTransactionDetail(
+            'Total Sales', currencyFormatter.format(earning.totalSales)),
+        _buildTransactionDetail(
+            'Commission', currencyFormatter.format(earning.commission)),
+        _buildTransactionDetail('Net Earnings',
+            currencyFormatter.format(earning.totalSales - earning.commission)),
+      ],
+    );
+  }
+
+  Widget _buildTransactionDetail(String label, String value) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(label, style: TextStyle(color: Colors.grey[600])),
+          Text(value, style: TextStyle(fontWeight: FontWeight.bold)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEmptyState(String message) {
+    return Center(
+      child: Text(
+        message,
+        style: TextStyle(color: Colors.white70),
       ),
     );
   }
 
   Widget _buildEarningsSummaryCard() {
     double totalSales = earnings.fold(0, (sum, item) => sum + item.totalSales);
-    double totalCommission = earnings.fold(0, (sum, item) => sum + item.commission);
+    double totalCommission =
+        earnings.fold(0, (sum, item) => sum + item.commission);
 
     return Container(
       margin: EdgeInsets.all(16),
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            Colors.black,
-            Color.fromARGB(255, 230, 0, 184),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+        gradient: AppColors.bannerGradient,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.purple.withOpacity(0.1),
+            color: Colors.purple,
             spreadRadius: 2,
             blurRadius: 5,
             offset: Offset(0, 3),
@@ -187,8 +331,10 @@ class _EarningsScreenState extends State<EarningsScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          _buildSummaryColumn('Total Sales', currencyFormatter.format(totalSales)),
-          _buildSummaryColumn('Total Commission', currencyFormatter.format(totalCommission)),
+          _buildSummaryColumn(
+              'Total Earnings', currencyFormatter.format(totalSales)),
+          _buildSummaryColumn(
+              'Total Commission', currencyFormatter.format(totalCommission)),
         ],
       ),
     );
@@ -198,161 +344,95 @@ class _EarningsScreenState extends State<EarningsScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          title,
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.w600,
+        ShaderMask(
+            shaderCallback: (bounds) =>
+                      AppColors.goldPurpleShader(bounds),
+          child: Text(
+            title,
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
           ),
         ),
-        Text(
-          value,
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
+
+        ShaderMask(
+            shaderCallback: (bounds) =>
+                      AppColors.goldPurpleShader(bounds),
+          child: Text(
+            value,
+            style: TextStyle(
+                fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
           ),
         ),
       ],
     );
   }
 
-  Widget _buildEarningItemCard(EarningDetail earning, BuildContext context) {
-    Color statusColor;
-    IconData statusIcon;
-
-    switch (earning.status) {
-      case 'Completed':
-        statusColor = Colors.green;
-        statusIcon = Icons.check_circle;
-        break;
-      case 'Pending':
-        statusColor = Colors.orange;
-        statusIcon = Icons.pending;
-        break;
-      case 'Processing':
-        statusColor = Colors.blue;
-        statusIcon = Icons.sync;
-        break;
-      default:
-        statusColor = Colors.grey;
-        statusIcon = Icons.help;
-    }
-
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ShopEarningsDetails(earning: earning, shop: earning,),
-          ),
-        );
-      },
-      child: Card(
-        color: Colors.white.withOpacity(0.2),
-        elevation: 4,
-        margin: EdgeInsets.symmetric(vertical: 8),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.store,
-                        color: Colors.white,
-                      ),
-                      SizedBox(width: 8),
-                      Text(
-                        earning.shopName,
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    decoration: BoxDecoration(
-                      color: statusColor.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(
-                        color: statusColor,
-                        width: 1,
-                      ),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(
-                          statusIcon,
-                          color: statusColor,
-                          size: 16,
-                        ),
-                        SizedBox(width: 4),
-                        Text(
-                          earning.status,
-                          style: TextStyle(
-                            color: statusColor,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  _buildDetailColumn(
-                    'Date',
-                    DateFormat('dd MMM yyyy').format(earning.date),
-                  ),
-                  _buildDetailColumn(
-                    'Total Sales',
-                    currencyFormatter.format(earning.totalSales),
-                  ),
-                  _buildDetailColumn(
-                    'Commission',
-                    currencyFormatter.format(earning.commission),
-                  ),
-                ],
-              ),
-            ],
-          ),
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: _buildAppBar(),
+      body: Container(
+        decoration: BoxDecoration(gradient: AppColors.scaffoldGradient),
+        child: Column(
+          children: [
+            _buildEarningsSummaryCard(),
+            _buildTabBar(),
+            SizedBox(
+              height: 10,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                IconButton(
+                  onPressed: () => _showFilterOptions(context),
+                  icon: Icon(Icons.tune_outlined,
+                      color: const Color.fromARGB(255, 255, 255, 255), size: 28),
+                ),
+                Text(
+                  ' Today Earnings  ',
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
+                ),
+                Icon(Icons.sort,
+                    color: const Color.fromARGB(255, 255, 255, 255)),
+              ],
+            ),
+            Expanded(
+              child: _buildTabBarView(),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildDetailColumn(String title, String value) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: TextStyle(
-            color: Color.fromARGB(255, 230, 230, 230),
-            fontWeight: FontWeight.w600,
-            fontSize: 12,
+  PreferredSizeWidget _buildAppBar() {
+    return AppBar(
+      centerTitle: true,
+             flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: AppColors.blackGradient,
+            
           ),
         ),
-        SizedBox(height: 4),
-        Text(
-          value,
-          style: TextStyle(
-            color: const Color.fromARGB(221, 227, 227, 227),
-            fontWeight: FontWeight.normal,
-          ),
+      leading: IconButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => BottomBarscreen()),
+          );
+        },
+        icon: Icon(Icons.arrow_back_ios, color: Colors.white),
+      ),
+      title: Text(
+        'Total Earnings Report',
+        style: GoogleFonts.poppins(color: Colors.white),
+      ),
+      actions: [
+        IconButton(
+          icon: Icon(Icons.tune_outlined, color: Colors.white),
+          onPressed: () => _showFilterOptions(context),
         ),
       ],
     );

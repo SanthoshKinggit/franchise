@@ -346,15 +346,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage>
                         width: screenWidth * 0.8,
                         height: screenHeight * 0.07,
                         decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              const Color.fromARGB(255, 53, 0, 48),
-                              const Color.fromARGB(255, 117, 0, 106),
-                              const Color.fromARGB(255, 255, 0, 230),
-                            ],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          ),
+                          gradient: AppColors.buttonGradient,
                           borderRadius: BorderRadius.circular(28),
                         ),
                         child: ElevatedButton(
@@ -374,10 +366,8 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage>
                               shaderCallback: (Rect bounds) {
                                 return LinearGradient(
                                   colors: [
-                                    const Color.fromARGB(255, 255, 247, 175),
-                                    const Color.fromARGB(255, 255, 234, 41),
-                                    const Color.fromARGB(255, 192, 144, 0),
-                                    const Color.fromARGB(255, 255, 250, 205)
+                                    const Color.fromARGB(255, 0, 0, 0),
+                                    
                                   ],
                                   begin: Alignment.topCenter,
                                   end: Alignment.bottomCenter,
@@ -387,8 +377,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage>
                                 _isOTPSent ? 'Reset Password' : 'Send OTP',
                                 style: TextStyle(
                                   fontFamily: 'Nunito',
-                                  color: Colors
-                                      .amber, // Contrast color for better readability
+                                  color: const Color.fromARGB(255, 0, 0, 0), // Contrast color for better readability
                                   fontSize: screenWidth * 0.05,
                                   fontWeight: FontWeight.bold,
                                 ),

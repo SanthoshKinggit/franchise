@@ -37,6 +37,7 @@ class ShopEarningsDetails extends StatelessWidget {
     ),
   ];
 
+
   ShopEarningsDetails({super.key, required this.earning, required EarningDetail shop});
 
   final currencyFormatter = NumberFormat.currency(symbol: '₹', decimalDigits: 2);
@@ -47,21 +48,61 @@ class ShopEarningsDetails extends StatelessWidget {
     double totalSales = shopEarnings.fold(0, (sum, item) => sum + item.totalSales);
     double totalCommission = shopEarnings.fold(0, (sum, item) => sum + item.commission);
 
+ String filter = 'All'; // Default filter option
+
+  void showFilterOptions(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Filter Transactions'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                title: Text('Last 6 months'),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                title: Text('Last 1 year'),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                title: Text('Last month'),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                title: Text('All Transactions'),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        actions: [
+           IconButton(
+            icon: Icon(Icons.tune, color: Colors.white),
+            onPressed: () => showFilterOptions(context),
+          ),
+        ],
         centerTitle: true,
-        flexibleSpace: Container(
+             flexibleSpace: Container(
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Colors.black,
-                Color.fromARGB(255, 117, 0, 106),
-                Colors.black,
-              ],
-            ),
+            gradient: AppColors.blackGradient,
+            
           ),
         ),
         leading: IconButton(
@@ -75,15 +116,7 @@ class ShopEarningsDetails extends StatelessWidget {
       ),
       body: Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Colors.black,
-              Color.fromARGB(255, 80, 2, 64),
-              Colors.black,
-            ],
-          ),
+          gradient: AppColors.blackGradient,
         ),
         child: Column(
           children: [
@@ -125,7 +158,7 @@ class ShopEarningsDetails extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.purple.withOpacity(0.1),
+            color: Colors.purple,
             spreadRadius: 2,
             blurRadius: 5,
             offset: Offset(0, 3),
@@ -177,7 +210,7 @@ class ShopEarningsDetails extends StatelessWidget {
       margin: EdgeInsets.symmetric(horizontal: 16),
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.2),
+        color: Colors.white,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
@@ -186,7 +219,7 @@ class ShopEarningsDetails extends StatelessWidget {
           Text(
             'Monthly Statistics',
             style: TextStyle(
-              color: Colors.white,
+              color: const Color.fromARGB(255, 0, 0, 0),
               fontSize: 18,
               fontWeight: FontWeight.bold,
             ),
@@ -222,7 +255,7 @@ class ShopEarningsDetails extends StatelessWidget {
     }
 
     return Card(
-      color: Colors.white.withOpacity(0.2),
+      color: Colors.white,
       margin: EdgeInsets.symmetric(vertical: 8),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
@@ -238,14 +271,14 @@ class ShopEarningsDetails extends StatelessWidget {
                 Text(
                   'Transaction ID: ${earning.id}',
                   style: TextStyle(
-                    color: Colors.white70,
+                    color: const Color.fromARGB(179, 0, 0, 0),
                     fontSize: 12,
                   ),
                 ),
                 Text(
                   DateFormat('dd MMM yyyy').format(earning.date),
                   style: TextStyle(
-                    color: Colors.white70,
+                    color: const Color.fromARGB(179, 0, 0, 0),
                   ),
                 ),
               ],
@@ -267,7 +300,7 @@ class ShopEarningsDetails extends StatelessWidget {
                     Text(
                       currencyFormatter.format(earning.totalSales),
                       style: TextStyle(
-                        color: Colors.white,
+                        color: const Color.fromARGB(255, 0, 0, 0),
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
                       ),
@@ -280,14 +313,14 @@ class ShopEarningsDetails extends StatelessWidget {
                     Text(
                       'Commission',
                       style: TextStyle(
-                        color: Colors.white70,
+                        color: const Color.fromARGB(179, 0, 0, 0),
                         fontSize: 14,
                       ),
                     ),
                     Text(
                       currencyFormatter.format(earning.commission),
                       style: TextStyle(
-                        color: Colors.white,
+                        color: const Color.fromARGB(255, 0, 0, 0),
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
                       ),
@@ -297,14 +330,14 @@ class ShopEarningsDetails extends StatelessWidget {
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
-                    color: statusColor.withOpacity(0.1),
+                    color: Colors.black,
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(color: statusColor),
                   ),
                   child: Text(
                     earning.status,
                     style: TextStyle(
-                      color: statusColor,
+                      color: Colors.black,
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
                     ),
@@ -325,14 +358,14 @@ class ShopEarningsDetails extends StatelessWidget {
         Text(
           title,
           style: TextStyle(
-            color: Colors.white70,
+            color: const Color.fromARGB(179, 0, 0, 0),
             fontSize: 14,
           ),
         ),
         Text(
           currencyFormatter.format(amount),
           style: TextStyle(
-            color: Colors.white,
+            color: const Color.fromARGB(255, 0, 0, 0),
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
@@ -390,7 +423,7 @@ class ShopEarningsDetails extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: statusColor.withOpacity(0.1),
+        color: statusColor,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
           color: statusColor,

@@ -1,97 +1,79 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
-class TechSplashScreen extends StatefulWidget {
-  final String logoPath;
+import '../colors/colors.dart';
+
+class CoinParticle {
+  Offset position;
+  final double size;
+  final double speed;
+  final double rotationSpeed;
+  final double delay;
+  final double horizontalSpread;
+
+  CoinParticle({
+    required this.position,
+    required this.size,
+    required this.speed,
+    required this.rotationSpeed,
+    required this.delay,
+    required this.horizontalSpread,
+  });
+}
+
+class TopToBottomCoinsAnimation extends StatefulWidget {
+  final String logoPath =
+      'assets/images/slpash.png';
   final Function(BuildContext) onAnimationComplete;
 
-  const TechSplashScreen({
+  const TopToBottomCoinsAnimation({
     Key? key,
-    required this.logoPath,
     required this.onAnimationComplete,
     required Color primaryColor,
+    required String logoPath,
   }) : super(key: key);
 
   @override
-  _TechSplashScreenState createState() => _TechSplashScreenState();
+  _TopToBottomCoinsAnimationState createState() =>
+      _TopToBottomCoinsAnimationState();
 }
 
-class _TechSplashScreenState extends State<TechSplashScreen>
+class _TopToBottomCoinsAnimationState extends State<TopToBottomCoinsAnimation>
     with TickerProviderStateMixin {
-  late AnimationController _mainController;
-  late AnimationController _backgroundController;
-  late AnimationController _ringController;
-  late Animation<double> _scaleAnimation;
-  late Animation<double> _opacityAnimation;
-  late Animation<double> _slideAnimation;
-  late Animation<double> zoomOutAnimation;
-
-  final Color primaryColor = const Color.fromARGB(255, 81, 23, 88);
-  final Color accentColor = const Color.fromARGB(255, 81, 23, 88);
-
-  final List<CircleConfig> _circles = [];
-  final int numberOfCircles = 15;
+  late AnimationController _animationController;
+  final List<CoinParticle> coins = [];
+  final Color goldColor = const Color(0xFFFFD700);
 
   @override
   void initState() {
     super.initState();
-    _generateCircles();
+    _generateCoins();
 
-    _mainController = AnimationController(
-      duration: const Duration(milliseconds: 30),
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 2), // Slower animation
       vsync: this,
     );
 
-    _backgroundController = AnimationController(
-      duration: const Duration(milliseconds: 10),
-      vsync: this,
-    )..repeat();
-
-    _ringController = AnimationController(
-      duration: const Duration(milliseconds: 50),
-      vsync: this,
-    )..repeat();
-
-    _scaleAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(
-        parent: _mainController,
-        curve: const Interval(0.2, 0.7, curve: Curves.elasticOut),
-      ),
-    );
-
-    _opacityAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(
-        parent: _mainController,
-        curve: const Interval(0.4, 0.8, curve: Curves.easeIn),
-      ),
-    );
-
-    _slideAnimation = Tween<double>(begin: 50.0, end: 0.0).animate(
-      CurvedAnimation(
-        parent: _mainController,
-        curve: const Interval(0.2, 0.7, curve: Curves.easeOut),
-      ),
-    );
-
-    zoomOutAnimation = Tween<double>(begin: 1.0, end: 0.0).animate(
-      CurvedAnimation(
-        parent: _mainController,
-        curve: const Interval(0.6, 1.0, curve: Curves.easeIn),
-      ),
-    );
-
-    _mainController.forward().then((_) {
+    _animationController.forward().then((_) {
       widget.onAnimationComplete(context);
     });
   }
 
-  void _generateCircles() {
-    for (int i = 0; i < numberOfCircles; i++) {
-      _circles.add(
-        CircleConfig(
-          angle: (i * 2 * math.pi) / numberOfCircles,
-          radius: 100.0,
-          size: 5.0 + math.Random().nextDouble() * 5,
+  void _generateCoins() {
+    final random = math.Random();
+
+    // Generate more coins for a fuller effect
+    for (int i = 0; i < 40; i++) {
+      coins.add(
+        CoinParticle(
+          position: const Offset(0, -50), // Start above screen
+          size: random.nextDouble() * 20 + 15, // Varied sizes
+          speed:
+              random.nextDouble() * 0.6 + 0.4, // Slower speed for gentle fall
+          rotationSpeed: random.nextDouble() * 1.5 + 0.5,
+          delay: random.nextDouble() * 0.8, // More varied delays
+          horizontalSpread:
+              random.nextDouble() * 300 - 150, // Spread across screen width
         ),
       );
     }
@@ -99,161 +81,83 @@ class _TechSplashScreenState extends State<TechSplashScreen>
 
   @override
   void dispose() {
-    _mainController.dispose();
-    _backgroundController.dispose();
-    _ringController.dispose();
+    _animationController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+    final centerX = screenSize.width / 2;
+
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 87, 0, 78),
-      body: AnimatedBuilder(
-        animation: _backgroundController,
-        builder: (context, child) {
-          return Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  primaryColor,
-                  Color.fromARGB(255, 87, 0, 78),
-                ],
+      body: Container(
+        decoration: BoxDecoration(
+                    gradient: AppColors.blackGradient,
+
+        ),
+         // Set purple background color
+        child: Stack(
+          alignment: Alignment.center, // Center-align the stack contents
+          children: [
+            // Centered Background Image (Optional: Remove if not needed)
+            Positioned(
+              top: 280,
+              left: 120,
+              child: Image.asset(
+                'assets/images/WhatsApp_Image_2024-12-03_at_4.36.43_AM-removebg-preview.png',
+                height: 120, // Replace with your background image path
+                fit: BoxFit.contain, // Keep image contained within the screen
               ),
             ),
-            child: Stack(
-              children: [
-                // Enhanced animated background with moving particles and franchise-related icons
-                ...List.generate(20, (index) {
-                  final random = math.Random(index);
+            Positioned(
+                top: 400,
+                left: 130,
+                child: Image.asset(
+                  'assets/images/WhatsApp_Image_2024-12-02_at_2.06.40_AM-removebg-preview.png',
+                  height: 60,
+                )),
+            // Coins Animation
+            ...coins.map((coin) {
+              return AnimatedBuilder(
+                animation: _animationController,
+                builder: (context, child) {
+                  double progress =
+                      math.max(0, _animationController.value - coin.delay);
+                  if (progress > 1.0) progress = 1.0;
+
+                  // Vertical movement with easing
+                  final verticalDistance = progress * screenSize.height * 1.2;
+
+                  // Gentle horizontal sway
+                  final horizontalWave = math.sin(progress * 3 * math.pi) * 15;
+
                   return Positioned(
-                    left:
-                        random.nextDouble() * MediaQuery.of(context).size.width,
-                    top: random.nextDouble() *
-                        MediaQuery.of(context).size.height,
-                    child: AnimatedBuilder(
-                      animation: _backgroundController,
-                      builder: (context, child) {
-                        return Transform.translate(
-                          offset: Offset(
-                            math.sin(_backgroundController.value * 2 * math.pi +
-                                    index) *
-                                40,
-                            math.cos(_backgroundController.value * 2 * math.pi +
-                                    index) *
-                                40,
-                          ),
-                          child: CustomPaint(
-                            size: Size(200, 200),
-                            painter: FranchiseParticlePainter(random: random),
-                          ),
-                        );
-                      },
+                    left: centerX +
+                        coin.horizontalSpread +
+                        horizontalWave -
+                        coin.size / 2,
+                    top: verticalDistance - coin.size / 2,
+                    child: Transform(
+                      transform: Matrix4.identity()
+                        ..rotateY(progress * coin.rotationSpeed * 2 * math.pi),
+                      alignment: Alignment.center,
+                      child: Opacity(
+                        opacity: (1.0 - (progress * 0.3)).clamp(0.0, 1.0),
+                        child: Image.asset(
+                          widget.logoPath,
+                          width: coin.size,
+                          height: coin.size,
+                          fit: BoxFit.contain,
+                        ),
+                      ),
                     ),
                   );
-                }),
-
-                // Main content with rotating circles and logo
-                Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          // Rotating circles animation
-                          AnimatedBuilder(
-                            animation: _ringController,
-                            builder: (context, child) {
-                              return Transform.rotate(
-                                angle: _ringController.value * 2 * math.pi,
-                                child: Stack(
-                                  alignment: Alignment.center,
-                                  children: _circles.map((circle) {
-                                    return Transform.translate(
-                                      offset: Offset(
-                                        circle.radius * math.cos(circle.angle),
-                                        circle.radius * math.sin(circle.angle),
-                                      ),
-                                      child: Container(
-                                        width: circle.size,
-                                        height: circle.size,
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          shape: BoxShape.circle,
-                                        ),
-                                      ),
-                                    );
-                                  }).toList(),
-                                ),
-                              );
-                            },
-                          ),
-                          // Main logo and container
-                          AnimatedBuilder(
-                            animation: _mainController,
-                            builder: (context, child) {
-                              return Transform.translate(
-                                offset: Offset(0, _slideAnimation.value),
-                                child: Transform.scale(
-                                  scale: _scaleAnimation.value,
-                                  child: Opacity(
-                                    opacity: _opacityAnimation.value,
-                                    child: Container(
-                                      width: 150,
-                                      height: 150,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: Colors.white.withOpacity(0.1),
-                                        border: Border.all(
-                                          color: Colors.white,
-                                          width: 2,
-                                        ),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color:
-                                                Color.fromARGB(255, 87, 0, 78),
-                                            blurRadius: 30,
-                                            spreadRadius: 5,
-                                          ),
-                                        ],
-                                      ),
-                                      child: Center(
-                                        child: SizedBox(
-                                          width: 250,
-                                          height: 110,
-                                          child: Image.asset(
-                                            widget.logoPath,
-                                            width: 200,
-                                            height: 200,
-                                            errorBuilder:
-                                                (context, error, stackTrace) {
-                                              return Icon(
-                                                Icons.view_in_ar_rounded,
-                                                size: 60,
-                                                color: Colors.white,
-                                              );
-                                            },
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          );
-        },
+                },
+              );
+            }),
+          ],
+        ),
       ),
     );
   }

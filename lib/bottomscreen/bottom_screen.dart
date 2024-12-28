@@ -1,13 +1,17 @@
 import 'package:circle_nav_bar/circle_nav_bar.dart';
 import 'package:flutter/material.dart';
 import '../Earningsscreen/earnings_screen.dart';
+import '../MenuScren/menu_screen.dart';
+import '../Salesscreen/s.dart';
 import '../colors/colors.dart';
 import '../homescreen/dhashbroad.dart';
 import '../Salesscreen/sales_earn_screen.dart';
 import '../shop/myshop.dart';
 
 class BottomBarscreen extends StatefulWidget {
-  const BottomBarscreen({super.key});
+  const BottomBarscreen({
+    super.key,
+  });
 
   @override
   State<BottomBarscreen> createState() => _BottomBarscreenState();
@@ -24,32 +28,22 @@ class _BottomBarscreenState extends State<BottomBarscreen> {
   }
 
   // Gradient icon for active icons
-  Widget _buildGradientIcon(IconData iconData, String label, bool isActive) {
+  Widget _buildGradientIcon(IconData iconData, bool isActive) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center, // Center both icon and label
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        ShaderMask(
-          shaderCallback: (bounds) => AppColors.goldenPurpleShader(bounds),
-          child: Icon(
-            iconData,
-            size: 28, // Icon size
-            color: Colors.white, // The gradient will override this
-          ),
+        Icon(
+          iconData,
+          size: 22, // Icon size
+          color: const Color.fromARGB(255, 255, 0, 204), // The gradient will override this
         ),
-        if (!isActive) // Only show the label if the tab is not active
-          SizedBox(height: 4),
-        if (!isActive)
-          Text(
-            label,
-            style: TextStyle(color: Colors.white, fontSize: 10),
-          ),
       ],
     );
   }
 
   // Inactive icons with labels
-  Widget _buildInactiveIcon(IconData iconData, String label, bool isActive) {
+  Widget _buildInactiveIcon(IconData iconData, bool isActive) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center, // Center both icon and label
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -58,17 +52,10 @@ class _BottomBarscreenState extends State<BottomBarscreen> {
           shaderCallback: (bounds) => AppColors.goldPurpleShader(bounds),
           child: Icon(
             iconData,
-            size: 28,
+            size: 20,
             color: Colors.white,
           ),
         ),
-        if (!isActive) // Only show the label if the tab is not active
-          SizedBox(height: 4),
-        if (!isActive)
-          Text(
-            label,
-            style: TextStyle(color: Colors.white, fontSize: 10),
-          ),
       ],
     );
   }
@@ -79,24 +66,39 @@ class _BottomBarscreenState extends State<BottomBarscreen> {
       extendBody: true,
       bottomNavigationBar: CircleNavBar(
         activeIcons: [
-          _buildGradientIcon(Icons.home, 'Home', _tabIndex == 0), // Home icon with label
-          _buildGradientIcon(Icons.shopping_bag_outlined, 'Shop', _tabIndex == 1), // Shop icon with label
-          _buildGradientIcon(Icons.point_of_sale_sharp, 'Sales', _tabIndex == 2), // Sales icon with label
-          _buildGradientIcon(Icons.currency_rupee, 'Earnings', _tabIndex == 3), // Earnings icon with label
+          _buildGradientIcon(
+              Icons.home_filled, _tabIndex == 0), // Home icon with label
+          _buildGradientIcon(Icons.shopping_bag_outlined,
+              _tabIndex == 1), // Shop icon with label
+          _buildGradientIcon(Icons.point_of_sale_sharp,
+              _tabIndex == 2), // Sales icon with label
+          _buildGradientIcon(Icons.currency_rupee, _tabIndex == 3),
+          _buildGradientIcon(
+            Icons.menu,
+            _tabIndex == 4,
+          ), // Earnings icon with label
         ],
         inactiveIcons: [
-          _buildInactiveIcon(Icons.home, 'Home', _tabIndex == 0), // Home icon with label
-          _buildInactiveIcon(Icons.shopping_bag_outlined, 'Shop', _tabIndex == 1), // Shop icon with label
-          _buildInactiveIcon(Icons.point_of_sale_sharp, 'Sales', _tabIndex == 2), // Sales icon with label
-          _buildInactiveIcon(Icons.currency_rupee, 'Earnings', _tabIndex == 3), // Earnings icon with label
+          _buildInactiveIcon(
+              Icons.home_filled, _tabIndex == 0), // Home icon with label
+          _buildInactiveIcon(Icons.shopping_bag_outlined,
+              _tabIndex == 1), // Shop icon with label
+          _buildInactiveIcon(Icons.point_of_sale_sharp,
+              _tabIndex == 2), // Sales icon with label
+          _buildInactiveIcon(Icons.currency_rupee, _tabIndex == 3),
+          _buildGradientIcon(
+            Icons.menu,
+            _tabIndex == 4,
+          ),
+          // Earnings icon with label
         ],
         color: Colors.white,
         circleColor: Colors.white,
         circleShadowColor: AppColors.mainColor,
-        gradient: AppColors.blackGradient,
-        circleGradient: AppColors.blackGradient,
-        height: 70, // Increase the height of the bottom bar
-        circleWidth: 70, // Increase the size of the circle icons
+        gradient: AppColors.bottombarGradient,
+        circleGradient: AppColors.bottombarGradient,
+        height: 55,
+        circleWidth: 55,
         activeIndex: _tabIndex,
         onTap: (index) {
           setState(() {
@@ -104,7 +106,8 @@ class _BottomBarscreenState extends State<BottomBarscreen> {
             pageController.jumpToPage(_tabIndex);
           });
         },
-        padding: const EdgeInsets.only(left: 0, right: 0, bottom: 0), // Remove bottom padding
+        padding: const EdgeInsets.only(
+            left: 0, right: 0, bottom: 0), // Remove bottom padding
         cornerRadius: const BorderRadius.only(
           topLeft: Radius.circular(8),
           topRight: Radius.circular(8),
@@ -125,7 +128,7 @@ class _BottomBarscreenState extends State<BottomBarscreen> {
           ShopsListScreen(), // Shop screen
           SalesEarningsDetailsScreen(), // Sales screen
           EarningsScreen(), // Earnings screen
-          ShopsListScreen(),
+          ListDashboard()
         ],
       ),
     );

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart'; // Import NumberFormat
+import 'package:intl/intl.dart';
+
+import '../colors/colors.dart'; // Import NumberFormat
 
 class ReferralEarningsScreen extends StatefulWidget {
   const ReferralEarningsScreen({super.key});
@@ -90,15 +92,7 @@ class _ReferralEarningsScreenState extends State<ReferralEarningsScreen> {
       appBar: AppBar(
         flexibleSpace: Container(
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Colors.black,
-                Color.fromARGB(255, 117, 0, 106),
-                Colors.black,
-              ],
-            ),
+            gradient: AppColors.blackGradient,
           ),
         ),
         leading: IconButton(
@@ -126,17 +120,7 @@ class _ReferralEarningsScreenState extends State<ReferralEarningsScreen> {
         ],
       ),
       body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Colors.black,
-              Color.fromARGB(255, 80, 2, 64),
-              Colors.black,
-            ],
-          ),
-        ),
+        decoration: BoxDecoration(gradient: AppColors.blackGradient),
         child: Column(
           children: [
             // Total Earnings Container
@@ -147,8 +131,10 @@ class _ReferralEarningsScreenState extends State<ReferralEarningsScreen> {
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    Colors.black,
-                    Color.fromARGB(255, 216, 0, 194),
+                    Color(0xFFFFD700), // Bright gold
+                    Color(0xFFFFE135), // Light gold
+                    Color(0xFFC5A000), // Dark gold
+                    Color(0xFFFFD700)
                   ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
@@ -200,7 +186,7 @@ class _ReferralEarningsScreenState extends State<ReferralEarningsScreen> {
                       borderRadius: BorderRadius.circular(10),
                       boxShadow: [
                         BoxShadow(
-                          color: color2.withOpacity(0.1),
+                          color: color2,
                           spreadRadius: 1,
                           blurRadius: 3,
                           offset: Offset(0, 2),

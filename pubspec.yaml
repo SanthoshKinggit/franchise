@@ -42,6 +42,9 @@ dependencies:
   fl_chart: ^0.69.2
   circle_nav_bar: ^2.1.1
   get: ^4.6.6
+  cached_network_image: ^3.4.1
+  image_picker: ^1.1.2
+  image: ^4.5.2
 
 dev_dependencies:
   flutter_test:

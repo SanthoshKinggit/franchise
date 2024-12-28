@@ -2,7 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../StaffCount/staff_count.dart';
 import '../colors/colors.dart';
+import '../loginpage/Login_Screen.dart';
 
 class CustomDrawer extends StatelessWidget {
   final String selectedLanguage;
@@ -102,7 +104,7 @@ class CustomDrawer extends StatelessWidget {
                 // gradient: AppColors.blackGradient,
                 boxShadow: [
                   BoxShadow(
-                    // color: Colors.black.withOpacity(0.1),
+                    // color: Colors.black.withOpacity(),
                     blurRadius: 10,
                     spreadRadius: 1,
                   ),
@@ -217,12 +219,12 @@ class CustomDrawer extends StatelessWidget {
             ),
             _buildDrawerItem(
               icon: Icons.card_membership,
-              title: 'Membership',
+              title: 'Staff Management',
               onTap: () {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(builder: (context) => UserTypeSelection()),
-                // );
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => StaffDetailsScreen()),
+                );
               },
               showArrow: true,
             ),
@@ -322,7 +324,12 @@ class CustomDrawer extends StatelessWidget {
             buildDrawerItem(
               icon: Icons.logout,
               title: 'Logout',
-              onTap: () {},
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Signinscreen()),
+                );
+              },
               titleColor: AppColors.primaryColor,
             ),
           ],

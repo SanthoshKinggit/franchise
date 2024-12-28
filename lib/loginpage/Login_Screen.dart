@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, unused_element, unused_import
 
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../bottomscreen/bottom_screen.dart';
 import '../colors/colors.dart';
@@ -42,10 +43,7 @@ class _SigninscreenState extends State<Signinscreen> {
         physics: BouncingScrollPhysics(),
         child: Container(
           height: screenHeight,
-          
-        decoration: BoxDecoration(gradient: AppColors.scaffoldGradient),
-           
-          
+          decoration: BoxDecoration(gradient: AppColors.scaffoldGradient),
           child: Column(
             children: [
               Padding(
@@ -70,12 +68,11 @@ class _SigninscreenState extends State<Signinscreen> {
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        'Log in\nYour Account',
-                        style: TextStyle(
-                          color: Colors.amber,
-                          fontSize: screenWidth * 0.08,
+                        'Log in your Account',
+                        style: GoogleFonts.poppins(
+                          color: const Color.fromARGB(255, 227, 170, 0),
+                          fontSize: screenWidth * 0.06,
                           fontWeight: FontWeight.bold,
-                          fontFamily: 'Nunito',
                           height: 1.2,
                         ),
                       ),
@@ -146,22 +143,26 @@ class _SigninscreenState extends State<Signinscreen> {
                       ],
                     ),
 
-                    SizedBox(height: screenHeight * 0.02),
+                    SizedBox(height: screenHeight * 0.03),
 
                     // Sign in button
                     Container(
-                      width: screenWidth * 0.8,
-                      height: screenHeight * 0.07,
+                      width: screenWidth * 0.6,
+                      height: screenHeight * 0.06,
                       decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            const Color.fromARGB(255, 53, 0, 48),
-                            const Color.fromARGB(255, 117, 0, 106),
-                            const Color.fromARGB(255, 255, 0, 230),
-                          ],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
+                        gradient: LinearGradient(colors: [
+                          Color.fromARGB(255, 49, 48, 48),
+                          const Color.fromARGB(255, 0, 0, 0),
+                          Color.fromARGB(255, 49, 48, 48),
+                        ]),
+                        boxShadow: [
+                          BoxShadow(
+                              color: const Color.fromARGB(255, 255, 255, 255)
+                                  .withOpacity(0.3),
+                              spreadRadius: 2,
+                              blurRadius: 10,
+                              offset: Offset(0, 5))
+                        ],
                         borderRadius: BorderRadius.circular(28),
                       ),
                       child: ElevatedButton(
@@ -206,13 +207,13 @@ class _SigninscreenState extends State<Signinscreen> {
                             shaderCallback: (Rect bounds) {
                               return LinearGradient(
                                 colors: [
-                                  const Color.fromARGB(255, 255, 247, 175),
-                                  const Color.fromARGB(255, 255, 234, 41),
-                                  const Color.fromARGB(255, 192, 144, 0),
-                                  const Color.fromARGB(255, 255, 250, 205)
+                                  Color(0xFFFFD700), // Bright gold
+                                  Color(0xFFFFE135), // Light gold
+                                  Color(0xFFC5A000), // Dark gold
+                                  Color(0xFFFFD700),
                                 ],
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
+                                begin: Alignment.centerLeft,
+                                end: Alignment.centerRight,
                               ).createShader(bounds);
                             },
                             child: Text(
@@ -221,7 +222,7 @@ class _SigninscreenState extends State<Signinscreen> {
                                 fontFamily: 'Nunito',
                                 color: Colors
                                     .white, // Contrast color for better readability
-                                fontSize: screenWidth * 0.05,
+                                fontSize: screenWidth * 0.04,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -230,7 +231,7 @@ class _SigninscreenState extends State<Signinscreen> {
                       ),
                     ),
 
-                    SizedBox(height: screenHeight * 0.01),
+                    SizedBox(height: screenHeight * 0.02),
 
                     TextButton(
                         onPressed: () {
@@ -249,56 +250,81 @@ class _SigninscreenState extends State<Signinscreen> {
                           ),
                         )),
 
-                    SizedBox(height: 12),
+                    SizedBox(height: screenHeight * 0.06),
+                    Text(
+                      'or Login With',
+                      style: TextStyle(
+                        fontFamily: 'Nunito',
+                        color: const Color.fromARGB(255, 255, 196, 0),
+                        fontSize: screenWidth * 0.035,
+                      ),
+                    ),
+                    SizedBox(height: screenHeight * 0.04),
+
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        Image.asset(
-                          'assets/images/Google_Icons-09-512.webp',
-                          height: 50,
+                        CircleAvatar(
+                          backgroundColor: Colors.white.withOpacity(0.4),
+                          child: Image.asset(
+                            'assets/images/Google_Icons-09-512.webp',
+                            height: 40,
+                          ),
                         ),
-                        Image.asset(
-                          'assets/images/apple-logo-transparent.png',
-                          height: 40,
+                        CircleAvatar(
+                          backgroundColor: Colors.white.withOpacity(0.4),
+                          child: Padding(
+                            padding: const EdgeInsets.all(2.0),
+                            child: Image.asset(
+                              'assets/images/apple-logo-transparent.png',
+                              height: 40,
+                            ),
+                          ),
                         ),
-                        Image.asset(
-                          'assets/images/Facebook_Logo_2023.png',
-                          height: 40,
+                        CircleAvatar(
+                          backgroundColor: Colors.white.withOpacity(0.4),
+                          child: Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: Image.asset(
+                              'assets/images/Facebook_Logo_2023.png',
+                              height: 40,
+                            ),
+                          ),
                         ),
                       ],
                     ),
-                    SizedBox(height: 36),
+                    SizedBox(height: screenHeight * 0.04),
 
-                    Center(
-                      child: InkWell(
-                        onTap: () {
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(builder: (context) => Homepage1()),
-                          // );
-                        },
-                        child: RichText(
-                          text: TextSpan(
-                            text: "Create New Account  ",
-                            style: TextStyle(
-                              fontFamily: 'Nunito',
-                              color: const Color.fromARGB(255, 255, 255, 255),
-                              fontSize: screenWidth * 0.035,
-                            ),
-                            children: const [
-                              TextSpan(
-                                text: "  Create Account",
-                                style: TextStyle(
-                                  fontFamily: 'Nunito',
-                                  color: Colors.amber,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
+                    // Center(
+                    //   child: InkWell(
+                    //     onTap: () {
+                    //       // Navigator.push(
+                    //       //   context,
+                    //       //   MaterialPageRoute(builder: (context) => Homepage1()),
+                    //       // );
+                    //     },
+                    //     child: RichText(
+                    //       text: TextSpan(
+                    //         text: "Create New Account  ",
+                    //         style: TextStyle(
+                    //           fontFamily: 'Nunito',
+                    //           color: const Color.fromARGB(255, 255, 255, 255),
+                    //           fontSize: screenWidth * 0.035,
+                    //         ),
+                    //         children: const [
+                    //           TextSpan(
+                    //             text: "  Create Account",
+                    //             style: TextStyle(
+                    //               fontFamily: 'Nunito',
+                    //               color: Colors.amber,
+                    //               fontWeight: FontWeight.w500,
+                    //             ),
+                    //           ),
+                    //         ],
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
                   ],
                 ),
               ),
