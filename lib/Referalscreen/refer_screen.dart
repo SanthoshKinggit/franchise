@@ -119,7 +119,6 @@ class _ReferEarningsScreenState extends State<ReferEarningsScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        centerTitle: true,
         flexibleSpace: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
